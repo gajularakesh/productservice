@@ -12,4 +12,5 @@ public interface ProductService {
     public Product postProduct(String title, String description, Long price,String image);
     public List<Product> getAllProducts();
     public Product deleteProduct(Long id);
+    public Product updateProduct(Long id, String title, String description, Long price,String image);
 }
