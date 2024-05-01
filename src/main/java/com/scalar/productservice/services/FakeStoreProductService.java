@@ -1,9 +1,11 @@
 package com.scalar.productservice.services;
 
+import com.scalar.productservice.dto.CatagoryDto;
 import com.scalar.productservice.dto.CreateProductDto;
 import com.scalar.productservice.dto.FakeStoreProductDto;
 import com.scalar.productservice.models.Catagory;
 import com.scalar.productservice.models.Product;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -81,6 +83,32 @@ public class FakeStoreProductService implements ProductService{
         createProductDto.setPrice(price);
         FakeStoreProductDto fakeStoreProductDto = restTemplate.patchForObject("https://fakestoreapi.com/products/{id}",createProductDto,FakeStoreProductDto.class,id);
         return fakeStoreProductDto.toProduct();
+    }
+
+    @Override
+    public List<Catagory> getAllCatagories() {
+        List<Catagory> catagories = new ArrayList<>();
+        CatagoryDto[] response = restTemplate.
+                getForObject("https://fakestoreapi.com/products/categories" , CatagoryDto[].class);
+        for(CatagoryDto catagoryDto : response){
+            catagories.add(catagoryDto.toCatagory());
+        }
+        return catagories;
+    }
+
+    @Override
+    public List<Product> getCatagoriesByCatagory(String catagory) {
+        List<Product> products = new ArrayList<>();
+        FakeStoreProductDto[] response = restTemplate.
+                getForObject("https://fakestoreapi.com/products/category/{specific}" , FakeStoreProductDto[].class,catagory);
+        for(FakeStoreProductDto fakeStoreProductDto : response){
+            products.add(fakeStoreProductDto.toProduct());
+            fakeStoreProductDto.getCatagory().setTitle(catagory);
+
+
+        }
+        return products;
+
     }
 
 

@@ -3,6 +3,7 @@ package com.scalar.productservice.controller;
 import com.scalar.productservice.dto.CreateProductDto;
 import com.scalar.productservice.dto.ExectionDto;
 import com.scalar.productservice.dto.UpdateProductDTO;
+import com.scalar.productservice.models.Catagory;
 import com.scalar.productservice.models.Product;
 import com.scalar.productservice.services.FakeStoreProductService;
 import com.scalar.productservice.services.ProductService;
@@ -65,5 +66,19 @@ public class ProductController {
 //       return new  ResponseEntity<ExectionDto>(new ExectionDto("Server Goes Down please try After some time"), HttpStatusCode.valueOf(405));
 //
 //    }
+
+
+    @GetMapping("/catagories")
+    public List<Catagory> getAllCatagories() {
+        return productService.getAllCatagories();
+
+    }
+    @GetMapping("/catagories/{catagory}")
+    public List<Product> getCatagoriesByCatagory(@PathVariable("catagory") String catagory) {
+        return productService.getCatagoriesByCatagory(catagory);
+
+    }
+
+
 
 }

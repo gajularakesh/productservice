@@ -28,7 +28,6 @@ public class FakeStoreProductDto {
     public Product toProduct(){
         Product product = new Product();
         product.setId(id);
-        Catagory catagory = new Catagory();
         product.setCatagory(catagory);
         product.setDescription(description);
         product.setTitle(title);
