@@ -5,17 +5,16 @@ import com.scalar.productservice.dto.CreateProductDto;
 import com.scalar.productservice.dto.FakeStoreProductDto;
 import com.scalar.productservice.models.Catagory;
 import com.scalar.productservice.models.Product;
-import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
     RestTemplate restTemplate ;
@@ -27,17 +26,13 @@ public class FakeStoreProductService implements ProductService{
     @Override
     public Product getProductById(Long id){
 
-
-
         FakeStoreProductDto fakeStoreProductDto = restTemplate.
                                                             getForObject("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class);
-
-
         return fakeStoreProductDto.toProduct();
     }
 
     @Override
-    public Product postProduct(String title, String description, Long price,String image) {
+    public Product postProduct(String title, String description, double price,String image,String catagory ) {
 
         CreateProductDto createProductDto = new CreateProductDto();
         createProductDto.setTitle(title);
@@ -51,8 +46,6 @@ public class FakeStoreProductService implements ProductService{
 //                postForObject("https://fakestoreapi.com/products/" ,createProductDto ,FakeStoreProductDto.class);
 
        return responseEntity.getBody().toProduct();
-
-
     }
 
     @Override
@@ -75,12 +68,13 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product updateProduct(Long id, String title, String description, Long price, String image) {
+    public Product updateProduct(Long id, String title, String description, double price, String image,String catagory) {
         CreateProductDto createProductDto = new CreateProductDto();
         createProductDto.setTitle(title);
         createProductDto.setImage(image);
         createProductDto.setDescription(description);
         createProductDto.setPrice(price);
+        createProductDto.setCategory(catagory);
         FakeStoreProductDto fakeStoreProductDto = restTemplate.patchForObject("https://fakestoreapi.com/products/{id}",createProductDto,FakeStoreProductDto.class,id);
         return fakeStoreProductDto.toProduct();
     }
@@ -97,20 +91,14 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public List<Product> getCatagoriesByCatagory(String catagory) {
+    public List<Product> getProductsByCatagory(String catagory) {
         List<Product> products = new ArrayList<>();
         FakeStoreProductDto[] response = restTemplate.
                 getForObject("https://fakestoreapi.com/products/category/{specific}" , FakeStoreProductDto[].class,catagory);
         for(FakeStoreProductDto fakeStoreProductDto : response){
             products.add(fakeStoreProductDto.toProduct());
             fakeStoreProductDto.getCatagory().setTitle(catagory);
-
-
         }
         return products;
-
     }
-
-
-    //}
 }

@@ -1,5 +1,6 @@
 package com.scalar.productservice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class Product extends BaseModel{
 
     private String imageUrl;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)//when catagory doestn't exists create this first the product
     private Catagory  catagory;
 
 

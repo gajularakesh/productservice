@@ -7,6 +7,8 @@ import com.scalar.productservice.models.Catagory;
 import com.scalar.productservice.models.Product;
 import com.scalar.productservice.services.FakeStoreProductService;
 import com.scalar.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +18,14 @@ import java.util.List;
 @RestController
 public class ProductController {
 
+    @Autowired
+    @Qualifier("dataBaseProductService")
     ProductService productService;
 
-   ProductController(ProductService productService){
-        this.productService = productService;
-    }
+//   ProductController(@Qualifier("dataBaseProductService") ProductService productService) {
+//        this.productService = productService;
+//
+//    }
 
     @GetMapping("/products/{id}")
     public Product getProductById(@PathVariable("id") Long id){
@@ -33,7 +38,8 @@ public class ProductController {
                createProductDto.getTitle(),
                createProductDto.getDescription(),
                createProductDto.getPrice(),
-               createProductDto.getImage()
+               createProductDto.getImage(),
+               createProductDto.getCategory()
        );
 
     }
@@ -55,7 +61,8 @@ public class ProductController {
                 updateProductDto.getTitle(),
                 updateProductDto.getDescription(),
                 updateProductDto.getPrice(),
-                updateProductDto.getImage()
+                updateProductDto.getImage(),
+                updateProductDto.getCategory()
         );
 
     }
@@ -74,8 +81,8 @@ public class ProductController {
 
     }
     @GetMapping("/catagories/{catagory}")
-    public List<Product> getCatagoriesByCatagory(@PathVariable("catagory") String catagory) {
-        return productService.getCatagoriesByCatagory(catagory);
+    public List<Product> getProductsByCatagory(@PathVariable("catagory") String catagory) {
+        return productService.getProductsByCatagory(catagory);
 
     }
 
