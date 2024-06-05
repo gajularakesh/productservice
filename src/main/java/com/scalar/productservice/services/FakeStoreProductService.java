@@ -5,6 +5,7 @@ import com.scalar.productservice.dto.CreateProductDto;
 import com.scalar.productservice.dto.FakeStoreProductDto;
 import com.scalar.productservice.models.Catagory;
 import com.scalar.productservice.models.Product;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,17 +18,27 @@ import java.util.List;
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements ProductService{
 
-    RestTemplate restTemplate ;
+    private RestTemplate restTemplate ;
 
-    FakeStoreProductService(RestTemplate restTemplate){
+    private RedisTemplate<String,Object> redisTemplate ;
+
+    FakeStoreProductService(RestTemplate restTemplate, RedisTemplate<String,Object> redisTemplate){
         this.restTemplate = restTemplate;
+        this.redisTemplate = redisTemplate;
     }
 
     @Override
     public Product getProductById(Long id){
 
+    Product productFromRedis = (Product) redisTemplate.opsForValue().get(String.valueOf(id));
+    if(productFromRedis != null){
+        return productFromRedis;
+    }
+
+
         FakeStoreProductDto fakeStoreProductDto = restTemplate.
                                                             getForObject("https://fakestoreapi.com/products/" + id, FakeStoreProductDto.class);
+        redisTemplate.opsForValue().set(String.valueOf(String.valueOf(fakeStoreProductDto.getId())), fakeStoreProductDto.toProduct());
         return fakeStoreProductDto.toProduct();
     }
 

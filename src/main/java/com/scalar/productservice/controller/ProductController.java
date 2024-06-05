@@ -20,6 +20,7 @@ public class ProductController {
 
     @Autowired
     @Qualifier("dataBaseProductService")
+     //@Qualifier("fakeStoreProductService")
     ProductService productService;
 
 //   ProductController(@Qualifier("dataBaseProductService") ProductService productService) {

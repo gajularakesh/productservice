@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Product save(Product product);
+    //Product save(Product product);
 
     Product findById(long id);
 
